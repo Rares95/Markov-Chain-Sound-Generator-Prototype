@@ -6,29 +6,6 @@ using System.Linq;
 
 public class SoundAnalysis : MonoBehaviour
 {
-    public class SynthSound
-    {
-        public readonly float SampleSize;
-        public readonly float SampleFrequency; //e.g. 44100Hz
-        public List<List<Tone>> ToneList = new List<List<Tone>>();
-
-        public float ToneLength => SampleSize / SampleFrequency;
-
-        public void AddTones(List<Tone> tones)
-        {
-            ToneList.Add(tones);
-        }
-    }
-    public class Tone
-    {
-        public float frequency;
-        public float amplitude;
-        public override string ToString()
-        {
-            return frequency + "Hz at amp " + amplitude;
-        }
-    }
-
     public AudioClip Clip;
     public AudioListener listen;
     [Range(0.0001f,0.1f)]
@@ -42,7 +19,7 @@ public class SoundAnalysis : MonoBehaviour
     {
         //draw the sound playing
         AudioListener.GetOutputData(tmp, 0);
-        DrawCurve(tmp, new Vector3(-8, -4, 0), new Vector2(scaling, 1), Color.yellow);
+        DrawCurve(tmp, new Vector3(-8, -4, 0), new Vector2(scaling, 1), Color.yellow, false);
 
         //Draw the file  
         Clip.GetData(tmp, 0);
@@ -61,14 +38,14 @@ public class SoundAnalysis : MonoBehaviour
         }
 
     }
-    public void DrawCurve(float[] data, Vector3 position, Vector2 scaling, Color color, bool hideSecondHalf = false)
+    public void DrawCurve(float[] data, Vector3 position, Vector2 scaling, Color color, bool hideSecondHalf = false, bool takeOnlyEverySecond = false)
     {
-        for (int i = 1; i < data.Length/(hideSecondHalf?2:1); i++)
+        for (int i = (takeOnlyEverySecond ? 2 : 1); i < data.Length/(hideSecondHalf?2:1); i += (takeOnlyEverySecond?2:1))
         {
             Debug.DrawLine(
                 new Vector3(
-                    (i - 1) * scaling.x + position.x,
-                    data[i - 1] * scaling.y + position.y,
+                    (i - (takeOnlyEverySecond ? 2 : 1)) * scaling.x + position.x,
+                    data[i - (takeOnlyEverySecond ? 2 : 1)] * scaling.y + position.y,
                     position.z),
                 new Vector3(
                     i * scaling.x + position.x,
@@ -81,7 +58,9 @@ public class SoundAnalysis : MonoBehaviour
     public static SynthSound SplitSoundIntoFrequencies(AudioClip Clip, int GrainSize, int dominantFrequenciesCount = 1)
     {
         int segments = Clip.samples / GrainSize;
-        SynthSound Sound = new SynthSound();
+        SynthSound Sound = ScriptableObject.CreateInstance<SynthSound>();
+        Sound.SampleFrequency = Clip.frequency;
+        Sound.SampleSize = GrainSize;
         for (int i = 0; i < segments; i++)
         {
             Sound.AddTones(GetMostPlayedFrequencies(Clip, GrainSize, i * GrainSize, dominantFrequenciesCount));
