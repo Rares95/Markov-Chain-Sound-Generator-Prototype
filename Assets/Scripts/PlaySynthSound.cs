@@ -51,30 +51,34 @@ public class PlaySynthSound : MonoBehaviour
     void OnAudioFilterRead(float[] data, int channels)
     {
         var tones = soundToBePlayed.GetToneAtIndex(m_Time);
-        
-        for (int i = 0; i < data.Length; i+=channels)
+
+        float offset = 0;
+        for (int i = 0; i < data.Length; i++)
         {
-
+            data[i] = 0;
+        }
+        foreach (var tone in tones)
+        {
             float value = 0;
-            float offset = 0;
+            offset += 117.279f; //a random number just to 
 
-            foreach (var tone in tones)
+            for (int i = 0; i < data.Length; i += channels)
             {
-                var calcFunc = Mathf.Sin((i+offset) * (tone.frequency)/(soundToBePlayed.SampleFrequency) * (2 * Mathf.PI)) * tone.amplitude;
+                var calcFunc = Mathf.Sin((i+offset) * (tone.frequency)/(soundToBePlayed.SampleFrequency) * (Mathf.PI)) * tone.amplitude;
                 value += calcFunc;
+
+                //smooth the Edges, very necesaary right now as every frequency is a sine and so start a 0 and every singel one goes up :P
+                int distance = Mathf.Min(i, data.Length - i);
+                if (distance < 200)
+                    value *= distance / 200f;
+                value *= volume;
+
+                for (int j = 0; j < channels; j++)
+                {
+                    data[i + j] += value;
+                }
             }
-
-            //smooth the Edges, very necesaary right now as every frequency is a sine and so start a 0 and every singel one goes up :P
-            int distance = Mathf.Min(i, data.Length - i);
-            if (distance < 200)
-                value *= distance / 200;
-            value *= volume;
-
-
-            for (int j = 0; j < channels; j++)
-            {
-                data[i + j] = value;
-            }
+            
         }
         
         m_Time++;

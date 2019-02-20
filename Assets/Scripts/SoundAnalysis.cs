@@ -77,19 +77,38 @@ public class SoundAnalysis : MonoBehaviour
         return ((float) index / sampleSize) * sampleRate;
     }
 
+    public static float[][] SplitIntoChannels(float[] audioData, int numberOfChannels)
+    {
+        int channelDataLength = audioData.Length / numberOfChannels;
+        float[][] audioChannelData = new float[numberOfChannels][];
+        for (int i = 0; i < numberOfChannels; i++)
+        {
+            float[] channelData = new float[channelDataLength];
+            for (int j = 0; j< channelDataLength; j++)
+            {
+                channelData[j] = audioData[i + j * numberOfChannels];
+            }
+            audioChannelData[i] = channelData;
+        }
+        return audioChannelData;
+    }
+
     public static List<Tone> GetMostPlayedFrequencies(AudioClip Clip, int GrainSize, int offset = 0, int dominantFrequenciesCount = 1)
     {
         if (!Mathf.IsPowerOfTwo(GrainSize))
             throw new System.ArgumentException("GrainSize needs to be a power of 2");
-        float[] data = new float[GrainSize];
+        float[] data = new float[GrainSize]; //*Clip.channels
         Clip.GetData(data, offset);
-        float[] frequencies = GetFrequencySpectrum(data);
+
+        //take only first channel for now
+        //var channelData = SplitIntoChannels(data, Clip.channels);
+        float[] frequencies = GetFrequencySpectrum(data);// channelData[0]);
         var Tones = new List<Tone>();
         for (int i = 0; i <= frequencies.Length / 2; i++) //ignore second half (IMPORTANT)
         {
             Tone t = new Tone();
             t.frequency = IndexToFrequency(i, GrainSize, Clip.frequency);
-            t.amplitude = frequencies[i] * 2;
+            t.amplitude = frequencies[i];// * 2;
             Tones.Add(t);
         }
         

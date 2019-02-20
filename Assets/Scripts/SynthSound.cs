@@ -6,6 +6,7 @@ using UnityEngine;
 public class SynthSound : ScriptableObject
 {
     public float SampleSize;
+    public int channels;
     public float SampleFrequency; //e.g. 44100Hz
     public List<List<Tone>> ToneList = new List<List<Tone>>();
 
@@ -43,7 +44,7 @@ public class SynthSound : ScriptableObject
         AudioClip selected = UnityEditor.Selection.activeObject as AudioClip;
         if (!selected)
             Debug.LogError("Selected was not an audioclip");
-        SynthSound result = SoundAnalysis.SplitSoundIntoFrequencies(selected, 2048, 1);
+        SynthSound result = SoundAnalysis.SplitSoundIntoFrequencies(selected, 2048, 128);
         //UnityEditor.EditorUtility.SaveFilePanelInProject(Choose save location)
     }
 # endif
