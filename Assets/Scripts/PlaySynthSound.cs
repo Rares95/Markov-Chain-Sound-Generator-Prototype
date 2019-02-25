@@ -10,15 +10,20 @@ public class PlaySynthSound : MonoBehaviour
 
     [Range(0f, 1f)]
     public float volume = 0.5f;
+    [Range(1, 128)]
+    public int m_AmountOfTones = 128;
 
     private int numFrames = -1;
     private AudioSource m_AudioSource;
     //public AnimationCurve m_AnimationCurve = new AnimationCurve();
-    private int m_Time;
+    private int m_Tone = 0;
+    private float m_Time = 0;
+    private float m_TimeOffset = 0;
 
     private void Awake()
     {
-        soundToBePlayed = SoundAnalysis.SplitSoundIntoFrequencies(Clip, 2048, 128);
+        soundToBePlayed = SoundAnalysis.SplitSoundIntoFrequencies(Clip, 2048, m_AmountOfTones);
+        m_TimeOffset = Time.time;
 
         m_AudioSource = gameObject.GetComponent<AudioSource>();
         m_AudioSource = m_AudioSource ?? gameObject.AddComponent<AudioSource>();
@@ -29,16 +34,11 @@ public class PlaySynthSound : MonoBehaviour
 
     void Update()
     {
-
-    }
-
-    private void FixedUpdate()
-    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!m_AudioSource.isPlaying)
             {
-                m_Time = 0;  //resets timer before playing sound
+                m_Tone = 0;  //resets timer before playing sound
                 m_AudioSource.Play();
             }
             else
@@ -46,11 +46,16 @@ public class PlaySynthSound : MonoBehaviour
                 m_AudioSource.Stop();
             }
         }
+        m_Time = Time.time;
     }
+
 
     void OnAudioFilterRead(float[] data, int channels)
     {
-        var tones = soundToBePlayed.GetToneAtIndex(m_Time);
+        m_Tone = Mathf.FloorToInt(((m_Time -m_TimeOffset) / soundToBePlayed.ToneLength) % soundToBePlayed.ToneCount);
+
+
+        var tones = soundToBePlayed.GetToneAtIndex(m_Tone);
 
         float offset = 0;
         for (int i = 0; i < data.Length; i++)
@@ -69,8 +74,8 @@ public class PlaySynthSound : MonoBehaviour
 
                 //smooth the Edges, very necesaary right now as every frequency is a sine and so start a 0 and every singel one goes up :P
                 int distance = Mathf.Min(i, data.Length - i);
-                if (distance < 200)
-                    value *= distance / 200f;
+                if (distance < 50)
+                    value *= distance / 50f;
                 value *= volume;
 
                 for (int j = 0; j < channels; j++)
@@ -79,12 +84,6 @@ public class PlaySynthSound : MonoBehaviour
                 }
             }
             
-        }
-        
-        m_Time++;
-        if (m_Time >= (soundToBePlayed.ToneCount))
-        {
-            m_Time = 0;
         }
     }
 

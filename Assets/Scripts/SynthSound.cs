@@ -28,7 +28,7 @@ public class SynthSound : ScriptableObject
         }
         if (index < 0 || index >= ToneList.Count)
         {
-            Debug.Log("Sound trying to play outside its defined range");
+            Debug.Log("Sound trying to play outside its defined range: "+ index + "/" + ToneList.Count);
             return new List<Tone>();
         }
         return ToneList[index];
