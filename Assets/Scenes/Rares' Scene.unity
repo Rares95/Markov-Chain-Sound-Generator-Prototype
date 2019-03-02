@@ -130,41 +130,14 @@ GameObject:
   m_Component:
   - component: {fileID: 412220508}
   - component: {fileID: 412220507}
-  - component: {fileID: 412220506}
   - component: {fileID: 412220509}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Markov Sample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &412220506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412220505}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 418f7682f852b174f8c0da7a3b0f8195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volume: 0.5
-  Frequency1: 400
-  Frequency2: 404
-  WaveLengthInSeconds: 1
-  squareSines: 2
-  AnimationCurveS:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  k_AnimationCurveCompressionFactor: 4
-  oscilloscopeFPS: 10
 --- !u!82 &412220507
 AudioSource:
   m_ObjectHideFlags: 0
@@ -284,15 +257,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 412220505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: c35ad79b39d55f84ba863e2b5ba872e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 0d4bb5bb356e419469dd44e631ca6099, type: 3}
-  volume: 1
-  maxSpareFrequencies: 32
-  scale: 1
-  scaleY: 1
+  m_Source: {fileID: 8300000, guid: 5f9401e73d3c55b4ba4f159b3ba88641, type: 3}
+  m_SpareMaxSamples: 8
+  m_Ahead: 1
+  m_Volume: 0.5
+  m_ScaleX: 1
+  m_ScaleY: 1
 --- !u!1 &924360705
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924360705}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 5, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -417,6 +390,24 @@ Light:
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -424,12 +415,15 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &1509210541

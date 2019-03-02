@@ -8,8 +8,10 @@ public class SoundAnalysis : MonoBehaviour
 {
     public AudioClip Clip;
     public AudioListener listen;
-    [Range(0.0001f,0.1f)]
+    [Range(0.0001f, 0.1f)]
     public float scaling = 0.01f;
+
+    public static int ignoreFrequenciesLow = 50;
 
     float[] spec = new float[1024];
     float[] tmp = new float[2048];
@@ -108,8 +110,12 @@ public class SoundAnalysis : MonoBehaviour
         {
             Tone t = new Tone();
             t.frequency = IndexToFrequency(i, GrainSize, Clip.frequency);
-            t.amplitude = frequencies[i];// * 2;
-            Tones.Add(t);
+            t.amplitude = frequencies[i] * Mathf.Log(i,10)/Mathf.Log(GrainSize,10);// * 2;
+
+            if(t.frequency > ignoreFrequenciesLow)
+            {
+                Tones.Add(t);
+            }
         }
         
         Tones = Tones.OrderByDescending(a => a.amplitude).ToList();

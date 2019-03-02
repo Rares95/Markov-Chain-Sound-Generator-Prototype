@@ -32,7 +32,7 @@ public class MarkovSampleLoudness : MonoBehaviour
     [Header("Oscilloscope")]
 
     [SerializeField]
-    float m_ScaleX = 1;
+    float m_ScaleXY = 1;
 
     [SerializeField]
     float m_ScaleY = 1;
@@ -153,12 +153,12 @@ public class MarkovSampleLoudness : MonoBehaviour
         var data = AudioListener.GetOutputData(2048, 0);
         for (int i = 0; i < data.Length - 1; ++i)
         {
-            Debug.DrawLine(new Vector3(i / (float)data.Length, data[i] * m_ScaleY * m_Volume, 0) * m_ScaleX, new Vector3((i + 1) / (float)data.Length, data[i + 1] * m_ScaleY * m_Volume, 0) * m_ScaleX, Color.green);
+            Debug.DrawLine(new Vector3(i / (float)data.Length, data[i] * m_ScaleY * m_Volume, 0) * m_ScaleXY, new Vector3((i + 1) / (float)data.Length, data[i + 1] * m_ScaleY * m_Volume, 0) * m_ScaleXY, Color.green);
         }
 
-        Debug.DrawLine(new Vector3(0, m_Volume * m_ScaleY, 0) * m_ScaleX, new Vector3(1, m_Volume * m_ScaleY, 0) * m_ScaleX, Color.yellow);
-        Debug.DrawLine(new Vector3(0, 0, 0) * m_ScaleX, new Vector3(1, 0, 0) * m_ScaleX, Color.white);
-        Debug.DrawLine(new Vector3(0, -m_Volume * m_ScaleY, 0) * m_ScaleX, new Vector3(1, -m_Volume * m_ScaleY, 0) * m_ScaleX, Color.yellow);
+        Debug.DrawLine(new Vector3(0, m_Volume * m_ScaleY, 0) * m_ScaleXY, new Vector3(1, m_Volume * m_ScaleY, 0) * m_ScaleXY, Color.yellow);
+        Debug.DrawLine(new Vector3(0, 0, 0) * m_ScaleXY, new Vector3(1, 0, 0) * m_ScaleXY, Color.white);
+        Debug.DrawLine(new Vector3(0, -m_Volume * m_ScaleY, 0) * m_ScaleXY, new Vector3(1, -m_Volume * m_ScaleY, 0) * m_ScaleXY, Color.yellow);
     }
 
 

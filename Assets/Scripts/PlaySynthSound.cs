@@ -10,7 +10,7 @@ public class PlaySynthSound : MonoBehaviour
 
     [Range(0f, 1f)]
     public float volume = 0.5f;
-    [Range(1, 128)]
+    [Range(1, 256)]
     public int m_AmountOfTones = 128;
 
     private int numFrames = -1;
@@ -29,7 +29,7 @@ public class PlaySynthSound : MonoBehaviour
         m_AudioSource = m_AudioSource ?? gameObject.AddComponent<AudioSource>();
         m_AudioSource.playOnAwake = false;
         m_AudioSource.spatialBlend = 0;
-        m_AudioSource.Stop();
+        m_AudioSource.Play();
     }
 
     void Update()
